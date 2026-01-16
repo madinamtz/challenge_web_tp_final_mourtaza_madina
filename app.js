@@ -77,7 +77,10 @@ app.post('/api/grades', async (req, res) => {
         if (req.body.valeur < 0 || req.body.valeur > 20 ) {
             return res.status(400).json({ message: "La note doit être entre 0 et 20" });
         }
-        const nouvelleNote = new Grade(req.body).populate('etudiant', 'cours');
+        const nouvelleNote = new Grade(req.body).populate({
+            path: 'etudiant',
+            populate: { path: 'cours' } // Infos du cours de l'étudiant
+        });
         await nouvelleNote.save();
         res.status(201).json(nouvelleNote);
     } catch (err) {
